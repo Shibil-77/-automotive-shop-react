@@ -1,9 +1,9 @@
-import React from "react";
+import React from 'react'
 
-const Login = () => {
+const Registration = () => {
   return (
-    <>
-      <div>
+    <div>
+         <div>
         <section class="h-screen">
           <div class="h-full">
             <div class="flex h-full flex-wrap items-center justify-center">
@@ -104,8 +104,8 @@ const Login = () => {
           </div>
         </section>
       </div>
-    </>
-  );
-};
+    </div>
+  )
+}
 
-export default Login;
+export default Registration

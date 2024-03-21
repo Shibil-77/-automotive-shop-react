@@ -1,6 +1,6 @@
 
 import React, { useState } from "react";
-import LOGO from '../../assetes/logo512.png'
+import LOGO from '../../assets/logo512.png'
 // import Image from "next/image";
 
 
