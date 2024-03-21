@@ -4,10 +4,12 @@ import React, { useState } from "react";
 // import { useRouter } from "next/navigation";
 import { valid } from "./function";
 import style from "./auth.module.css";
-// import { signUp } from "@/Api/authApi";
+import { signUp } from "../../Api/authApi/authApi";
+import { useNavigate } from "react-router-dom";
 
 const page = () => {
   // const router = useRouter();
+  const navigate = useNavigate();
   const [submit, setSubmit] = useState(false);
   const [passwordShown, setPasswordShown] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -44,19 +46,23 @@ const page = () => {
 
     if (Object.keys(newErrors).length === 0) {
       console.log("this is my");
-      // const response = await signUp(formData);
-      const response = true;
+      console.log(formData);
+      const response = await signUp(formData);
       console.log(response);
-      if (response.status) {
+      if (response.status === 200) {
+        console.log("fall");
         setLoading(false);
         setFormData({
           name: "",
           email: "",
           password: "",
         });
-
-        setVerify(response.message);
+        localStorage.setItem("token", response.accessToken);
+        localStorage.setItem("userName", response.userName);
+        navigate("/");
+        // setVerify(response.message);
       } else {
+        console.log("errror");
         setLoading(false);
 
         setErrMessage(response.message);

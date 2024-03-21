@@ -18,13 +18,15 @@ api.interceptors.response.use(
   (error) => {
     if (error.response) {
       const { status } = error.response;
-      if (status === 401) {
+      console.log(status);
+      if (status === 404) {
         localStorage.clear();
         window.location.href = "/login";
       } else if (status === 500) {
         window.location.href = "/500page";
       } else {
-        window.location.href = "/*";
+        return Promise.reject(error);
+        // window.location.href = "/*";
       }
     }
     return Promise.reject(error);

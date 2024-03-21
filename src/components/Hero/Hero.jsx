@@ -39,9 +39,9 @@ const Hero = () => {
             </a>
           </div>
         </div>
-        <div className="hidden lg:block lg:1/2" id="element2">
+        <div className="lg:1/2" id="element2">
           <img
-            className="w-full h-[30rem]"
+            className="w-full lg:h-[30rem] h-[20rem]"
             src={heroImg}
             alt="users are reading articles"
             id="animated"
