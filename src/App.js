@@ -7,7 +7,7 @@ import { Route, Routes } from "react-router-dom";
 import LoginPage from "./components/Login/Login";
 import Home from "./pages/Home/Home";
 import Signup from './pages/auth/Registration/Registration'
-import AddStock from "./components/addStock/AddStock";
+import Products from "./pages/Products/Products";
 
 function App() {
   return (
@@ -22,7 +22,7 @@ function App() {
 
           <Route path="/signup" element={<Signup />} />
 
-          <Route path="/addstock" element={<AddStock />} />
+          <Route path="/products" element={<Products />} />
           
         </Routes>
       </div>

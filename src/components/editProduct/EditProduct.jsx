@@ -1,17 +1,24 @@
 /* eslint-disable no-undef */
 import React, { useEffect, useState } from "react";
 import { valid } from "./functions";
-import { getProductDataApi } from "../../Api/productApi/product";
+import {
+  getProductDataApi,
+  editProductApi,
+} from "../../Api/productApi/product";
 
-const Modal = ({ setShowEdit }) => {
-  useEffect(async () => {
-    // await getProductData;
+const Modal = ({ setShowEdit, id ,setStatus,status}) => {
+  useEffect(() => {
+    getProductData();
   }, []);
 
   const getProductData = async () => {
-    // const ProductData = getProductDataApi(id);
+    const Product = await getProductDataApi(id);
+    const { product, price, stock, category, description } =
+      Product.productData;
+    setFormData({ product, price, stock, category, description });
   };
 
+  const [submit, setSubmit] = useState();
   const [loading, setLoading] = useState(false);
   const [ErrMessage, setErrMessage] = useState("");
   const [formData, setFormData] = useState({
@@ -20,6 +27,7 @@ const Modal = ({ setShowEdit }) => {
     stock: null,
     category: null,
     Description: "",
+    productId: id,
   });
   const [errors, setErrors] = useState({
     product: "",
@@ -28,23 +36,6 @@ const Modal = ({ setShowEdit }) => {
     category: "",
     Description: "",
   });
-
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-
-    setImages([]);
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setImages((old) => [...old, reader.result]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
-  };
 
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
@@ -56,7 +47,7 @@ const Modal = ({ setShowEdit }) => {
     valid(setErrors, formData);
   };
 
-  const addProductHandler = async (e) => {
+  const editProductHandler = async (e) => {
     e.preventDefault();
     setSubmit(true);
     setLoading(true);
@@ -64,13 +55,11 @@ const Modal = ({ setShowEdit }) => {
     const newErrors = await valid(setErrors, formData);
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
-      const response = await addProduct(formData);
+      const response = await editProductApi(formData, id);
       if (response?.status) {
-        localStorage.setItem("token", response.accessToken);
-        localStorage.setItem("userName", response.userName);
-        console.log("login set");
         setLoading(false);
         setShowEdit(false);
+        setStatus(!status)
         // navigate("/");
       }
 
@@ -126,7 +115,7 @@ const Modal = ({ setShowEdit }) => {
                           type="file"
                           className="hidden"
                           multiple
-                          onChange={handleImageChange}
+                          // onChange={handleImageChange}
                         />
                       </label>
                     </div>
@@ -231,7 +220,7 @@ const Modal = ({ setShowEdit }) => {
                           id="message"
                           onChange={handleInputChange}
                           name="description"
-                          rows="4"
+                          rows="2"
                           class="block p-2.5 w-full text-sm text-gray-900  rounded-lg border-[1px] border-gray-300 focus:ring-blue-500 focus:border-blue-500 hover:border-[1px]"
                           placeholder="Write your thoughts here..."
                         ></textarea>
@@ -254,7 +243,7 @@ const Modal = ({ setShowEdit }) => {
 
               {!loading && (
                 <button
-                  onClick={addProductHandler}
+                  onClick={editProductHandler}
                   type="button"
                   className=" inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
                 >

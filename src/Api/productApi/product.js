@@ -39,9 +39,21 @@ export const getProductDataApi = async (id) => {
     try {
         const { data, status } = await api.get(`product/getProductData/${id}`);
         data.status = status
-        console.log(data, 'data');
         return data;
     } catch (error) {
         return error.response.data;
     }
 };
+
+export const editProductApi = async (formData,id) => {
+    console.log(id);
+    try {
+        console.log(formData);
+        const { data, status } = await api.post(`product/editProduct/${id}`, formData);
+        data.status = status
+        return data;
+    } catch (error) {
+        return error.response.data;
+    }
+};
+

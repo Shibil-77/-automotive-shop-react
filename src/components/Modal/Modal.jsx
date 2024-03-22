@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 import React, { useState } from "react";
-import { valid } from "./functions";
+import { valid, imageUpload } from "./functions";
 import { addProduct } from "../../Api/productApi/product";
 
 const Modal = ({ setShowModal }) => {
@@ -8,6 +8,7 @@ const Modal = ({ setShowModal }) => {
   const [submit, setSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ErrMessage, setErrMessage] = useState("");
+  const [image,setImage] = useState();
   const [formData, setFormData] = useState({
     product: "",
     price: null,
@@ -25,19 +26,9 @@ const Modal = ({ setShowModal }) => {
 
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
-
-    setImages([]);
-
-    files.forEach((file) => {
-      const reader = new FileReader();
-
-      reader.onload = () => {
-        if (reader.readyState === 2) {
-          setImages((old) => [...old, reader.result]);
-        }
-      };
-      reader.readAsDataURL(file);
-    });
+    imageUpload(files)
+    setImage(files)
+ 
   };
 
   const handleInputChange = async (e) => {
@@ -46,7 +37,6 @@ const Modal = ({ setShowModal }) => {
       ...formData,
       [name]: value,
     });
-    console.log(formData);
     valid(setErrors, formData);
   };
 
@@ -54,7 +44,7 @@ const Modal = ({ setShowModal }) => {
     e.preventDefault();
     setSubmit(true);
     setLoading(true);
-
+    imageUpload(image);
     const newErrors = await valid(setErrors, formData);
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {

@@ -42,6 +42,7 @@ const page = () => {
     if (Object.keys(newErrors).length === 0) {
       const response = await userLogin(formData);
       if (response?.status) {
+        console.log(response,"response");
         localStorage.setItem("token", response.accessToken);
         localStorage.setItem("userName", response.userName);
         console.log("login set");
