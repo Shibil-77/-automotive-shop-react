@@ -15,10 +15,10 @@ export const valid = (setErrors, formData) => {
         newErrors.stock = "Please enter a stock or enter number";
     }
 
-    if (!newErrors.description) {
+    if (newErrors.description) {
         newErrors.description = "Please enter a description"
     }
-    if (!newErrors.images) {
+    if (newErrors.images) {
         newErrors.images = "Please select a image"
     }
 

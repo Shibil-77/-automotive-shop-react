@@ -5,8 +5,9 @@ import {
   getProductDataApi,
   editProductApi,
 } from "../../Api/productApi/product";
+import axios from "axios";
 
-const Modal = ({ setShowEdit, id ,setStatus,status}) => {
+const Modal = ({ setShowEdit, id, setStatus, status }) => {
   useEffect(() => {
     getProductData();
   }, []);
@@ -19,8 +20,10 @@ const Modal = ({ setShowEdit, id ,setStatus,status}) => {
   };
 
   const [submit, setSubmit] = useState();
+  const [imageData, setImageData] = useState();
   const [loading, setLoading] = useState(false);
   const [ErrMessage, setErrMessage] = useState("");
+  const [photoPreview, setPhotoPreview] = useState(null);
   const [formData, setFormData] = useState({
     product: "",
     price: null,
@@ -29,6 +32,7 @@ const Modal = ({ setShowEdit, id ,setStatus,status}) => {
     Description: "",
     productId: id,
   });
+
   const [errors, setErrors] = useState({
     product: "",
     price: "",
@@ -47,11 +51,38 @@ const Modal = ({ setShowEdit, id ,setStatus,status}) => {
     valid(setErrors, formData);
   };
 
+  const handleImageChange = async (e) => {
+    const photoFile = e.target.files?.[0];
+    if (photoFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPhotoPreview(e.target?.result);
+      };
+      reader.readAsDataURL(photoFile);
+    } else {
+      setPhotoPreview(null);
+    }
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    formData.append("upload_preset", "jnnjctuj");
+
+    await axios
+      .post("https://api.cloudinary.com/v1_1/dzarzvfph/image/upload/", formData)
+      .then((response) => {
+        console.log(formData, "formDataaa");
+        setImageData({
+          public_id: response.data.public_id,
+          secure_url: response.data.secure_url,
+        });
+      })
+      .catch((error) => console.log(error));
+  };
+
   const editProductHandler = async (e) => {
     e.preventDefault();
     setSubmit(true);
     setLoading(true);
-
+    setFormData((formData.images = imageData));
     const newErrors = await valid(setErrors, formData);
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
@@ -59,7 +90,7 @@ const Modal = ({ setShowEdit, id ,setStatus,status}) => {
       if (response?.status) {
         setLoading(false);
         setShowEdit(false);
-        setStatus(!status)
+        setStatus(!status);
         // navigate("/");
       }
 
@@ -93,6 +124,17 @@ const Modal = ({ setShowEdit, id ,setStatus,status}) => {
             {/*body*/}
             <div className="relative p-6 flex-auto">
               <div className="px-10">
+                {photoPreview ? (
+                  <img
+                    src={photoPreview}
+                    alt=""
+                    width={50}
+                    className="absolute top-10 left-36"
+                    onClick={() => {
+                      setPhotoPreview(null);
+                    }}
+                  />
+                ) : null}
                 <div>
                   {/* <form className="mt-8 space-y-3"> */}
                   <div className="grid grid-cols-1 space-y-2">
@@ -115,7 +157,7 @@ const Modal = ({ setShowEdit, id ,setStatus,status}) => {
                           type="file"
                           className="hidden"
                           multiple
-                          // onChange={handleImageChange}
+                          onChange={handleImageChange}
                         />
                       </label>
                     </div>
