@@ -5,7 +5,7 @@ import style from "../registration/auth.module.css";
 import { userLogin } from "../../Api/authApi/authApi";
 // import PublicRoute from '@/components/authenticationRoute/PublicRoute';
 // import { errorToast, successToast } from '@/components/Toast/Toast';
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const page = () => {
   const navigate = useNavigate();
@@ -42,7 +42,7 @@ const page = () => {
     if (Object.keys(newErrors).length === 0) {
       const response = await userLogin(formData);
       if (response?.status) {
-        console.log(response,"response");
+        console.log(response, "response");
         localStorage.setItem("token", response.accessToken);
         localStorage.setItem("userName", response.userName);
         console.log("login set");
@@ -150,7 +150,6 @@ const page = () => {
                     </button>
                   )}
 
-                  
                   {loading && (
                     <button
                       type="button"
@@ -186,14 +185,12 @@ const page = () => {
             </p>
           </div>
           <div className="text-center mb-4 cursor-pointer">
-            <a
+            <Link
               className="inline-block text-sm text-slate-500 hover:text-slate-900"
-              onClick={() => {
-                // router.push("/register");
-              }}
+              to={"/signup"}
             >
               Create an account?
-            </a>
+            </Link>
           </div>
         </div>
       </div>

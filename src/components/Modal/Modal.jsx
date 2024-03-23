@@ -1,34 +1,58 @@
 /* eslint-disable no-undef */
 import React, { useState } from "react";
-import { valid, imageUpload } from "./functions";
+import { valid } from "./functions";
 import { addProduct } from "../../Api/productApi/product";
+import axios from "axios";
+import { Image } from "cloudinary-react";
 
-const Modal = ({ setShowModal }) => {
-  const [images, setImages] = useState([]);
+const Modal = ({ setShowModal, status, setStatus }) => {
+  const [image, setImage] = useState("");
   const [submit, setSubmit] = useState(false);
   const [loading, setLoading] = useState(false);
   const [ErrMessage, setErrMessage] = useState("");
-  const [image,setImage] = useState();
+  const [photoPreview, setPhotoPreview] = useState(null);
   const [formData, setFormData] = useState({
     product: "",
     price: null,
     stock: null,
-    category: null,
-    Description: "",
+    category: "car",
+    description: "",
+    images: null,
   });
   const [errors, setErrors] = useState({
     product: "",
     price: "",
     stock: "",
     category: "",
-    Description: "",
+    description: "",
   });
 
-  const handleImageChange = (e) => {
-    const files = Array.from(e.target.files);
-    imageUpload(files)
-    setImage(files)
- 
+  const handleImageChange = async (e) => {
+    const photoFile = e.target.files?.[0];
+
+    if (photoFile) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setPhotoPreview(e.target?.result);
+      };
+      reader.readAsDataURL(photoFile);
+    } else {
+      setPhotoPreview(null);
+    }
+
+    const formData = new FormData();
+    formData.append("file", e.target.files[0]);
+    formData.append("upload_preset", "jnnjctuj");
+
+    await axios
+      .post("https://api.cloudinary.com/v1_1/dzarzvfph/image/upload/", formData)
+      .then((response) => {
+        setImage({
+          public_id: response.data.public_id,
+          secure_url: response.data.secure_url,
+        });
+      })
+      .catch((error) => console.log(error));
   };
 
   const handleInputChange = async (e) => {
@@ -44,16 +68,15 @@ const Modal = ({ setShowModal }) => {
     e.preventDefault();
     setSubmit(true);
     setLoading(true);
-    imageUpload(image);
+    setFormData((formData.images = image));
     const newErrors = await valid(setErrors, formData);
     setErrors(newErrors);
     if (Object.keys(newErrors).length === 0) {
       const response = await addProduct(formData);
       if (response?.status) {
-        localStorage.setItem("token", response.accessToken);
-        localStorage.setItem("userName", response.userName);
         console.log("login set");
         setLoading(false);
+        setStatus(!status);
         setShowModal(false);
         // navigate("/");
       }
@@ -88,6 +111,17 @@ const Modal = ({ setShowModal }) => {
             {/*body*/}
             <div className="relative p-6 flex-auto">
               <div className="px-10">
+                {photoPreview ? (
+                  <img
+                    src={photoPreview}
+                    alt=""
+                    width={50}
+                    className="absolute top-10 left-36"
+                    onClick={() => {
+                      setPhotoPreview(null);
+                    }}
+                  />
+                ) : null}
                 <div>
                   {/* <form className="mt-8 space-y-3"> */}
                   <div className="grid grid-cols-1 space-y-2">
@@ -112,6 +146,13 @@ const Modal = ({ setShowModal }) => {
                           multiple
                           onChange={handleImageChange}
                         />
+                        <div className="flex justify-center">
+                          {submit && (
+                            <small className="invalid-feedback text-red-600">
+                              {errors.images}
+                            </small>
+                          )}
+                        </div>
                       </label>
                     </div>
                   </div>
@@ -134,6 +175,13 @@ const Modal = ({ setShowModal }) => {
                           placeholder=" Product Name"
                           className="appearance-none block w-full  text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         />
+                        <div className="flex justify-center ">
+                          {submit && (
+                            <small className="invalid-feedback text-red-600">
+                              {errors.product}
+                            </small>
+                          )}
+                        </div>
                       </div>
                       <div className="w-full md:w-4/12 px-3 mb-6 md:mb-0">
                         <label
@@ -163,6 +211,13 @@ const Modal = ({ setShowModal }) => {
                               <path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
                             </svg>
                           </div>
+                          <div className="flex justify-center ">
+                            {submit && (
+                              <small className="invalid-feedback text-red-600">
+                                {errors.category}
+                              </small>
+                            )}
+                          </div>
                         </div>
                       </div>
                       <div className="w-full md:w-4/12 px-3 mb-6 md:mb-0">
@@ -181,6 +236,13 @@ const Modal = ({ setShowModal }) => {
                           name="price"
                           className="appearance-none block w-full  text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         />
+                        <div className="flex justify-center ">
+                          {submit && (
+                            <small className="invalid-feedback text-red-600">
+                              {errors.price}
+                            </small>
+                          )}
+                        </div>
                       </div>
                     </div>
 
@@ -201,6 +263,13 @@ const Modal = ({ setShowModal }) => {
                           placeholder="xxxxx"
                           className="appearance-none block w-full  text-gray-700 border border-gray-200 rounded py-3 px-4 leading-tight focus:outline-none focus:bg-white focus:border-gray-500"
                         />
+                        <div className="flex justify-center ">
+                          {submit && (
+                            <small className="invalid-feedback text-red-600">
+                              {errors.stock}
+                            </small>
+                          )}
+                        </div>
                       </div>
 
                       <div className="w-full md:w-8/12 px-3 mb-6 md:mb-0 rounded-lg">
@@ -219,6 +288,13 @@ const Modal = ({ setShowModal }) => {
                           class="block p-2.5 w-full text-sm text-gray-900  rounded-lg border-[1px] border-gray-300 focus:ring-blue-500 focus:border-blue-500 hover:border-[1px]"
                           placeholder="Write your thoughts here..."
                         ></textarea>
+                        <div className="flex justify-center">
+                          {submit && (
+                            <small className="invalid-feedback text-red-600">
+                              {errors.description}
+                            </small>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </div>

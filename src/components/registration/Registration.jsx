@@ -5,7 +5,7 @@ import React, { useState } from "react";
 import { valid } from "./function";
 import style from "./auth.module.css";
 import { signUp } from "../../Api/authApi/authApi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 const page = () => {
   // const router = useRouter();
@@ -228,12 +228,12 @@ const page = () => {
             </p>
           </div>
           <div className="text-center mb-4 cursor-pointer">
-            <a
+            <Link
+              to={"/login"}
               className="inline-block text-sm text-slate-500 hover:text-slate-900"
-              // onClick={() => router.push("/login")}
             >
               Have an account? Login
-            </a>
+            </Link>
           </div>
         </div>
       </div>

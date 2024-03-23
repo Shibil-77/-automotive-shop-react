@@ -29,7 +29,7 @@ const AddStock = () => {
     console.log(id);
     const res = await removeProductApi(id);
     if (res.status) {
-      setProductData(productData.filter((data) => data._id !== id));
+      setStatus(!status);
     }
   };
 
@@ -46,14 +46,28 @@ const AddStock = () => {
               Add New Product
             </button>
           </div>
-          {showModal ? <Modal setShowModal={setShowModal} /> : null}
+          {showModal ? (
+            <Modal
+              setShowModal={setShowModal}
+              setStatus={setStatus}
+              status={status}
+            />
+          ) : null}
           {showEdit ? (
-            <EditProduct setShowEdit={setShowEdit} id={editProductID} setStatus={setStatus} status={status} />
+            <EditProduct
+              setShowEdit={setShowEdit}
+              id={editProductID}
+              setStatus={setStatus}
+              status={status}
+            />
           ) : null}
 
           <table className="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
             <thead className="text-xs text-gray-700 uppercase bg-primary dark:bg-gray-700 dark:text-gray-400">
               <tr>
+              <th scope="col" className="px-6 py-3">
+                  Image
+                </th>
                 <th scope="col" className="px-6 py-3">
                   Product name
                 </th>
@@ -77,20 +91,26 @@ const AddStock = () => {
                   return (
                     <>
                       <tr className="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
+                      <th
+                          scope="row"
+                          className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
+                        >
+                          <img src={value?.images?.secure_url} alt="" className="w-16 h-16"/>
+                        </th>
                         <th
                           scope="row"
                           className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap dark:text-white"
                         >
                           {value.product}
                         </th>
-                        <td className="px-6 py-4"> {value.stock}</td>
-                        <td className="px-6 py-4">{value.category}</td>
-                        <td className="px-6 py-4">${value.price}</td>
+                        <td className="px-6 py-4"> {value?.stock}</td>
+                        <td className="px-6 py-4">{value?.category}</td>
+                        <td className="px-6 py-4">${value?.price}</td>
                         <td className="px-6 py-4">
                           <button
                             onClick={() => {
                               setShowEdit(true);
-                              setEditProductID(value._id);
+                              setEditProductID(value?._id);
                             }}
                             className="font-medium text-blue-600 dark:text-blue-500 hover:underline"
                           >
@@ -98,7 +118,7 @@ const AddStock = () => {
                           </button>
                           <button
                             onClick={() => {
-                              removeProduct(value._id);
+                              removeProduct(value?._id);
                             }}
                             className="ml-3 font-medium text-red-600 dark:text-blue-500 hover:underline"
                           >

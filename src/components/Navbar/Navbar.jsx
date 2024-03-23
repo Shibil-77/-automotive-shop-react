@@ -1,24 +1,40 @@
-
-import React, { useState } from "react";
-import LOGO from '../../assets/logo512.png'
+import React, { useEffect, useState } from "react";
+import LOGO from "../../assets/logo512.png";
+import { Link, useNavigate } from "react-router-dom";
 // import Image from "next/image";
 
-
 const Navbar = () => {
+  const [token, setToken] = useState(false);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    const data = localStorage.getItem("token");
+    setToken(data);
+  }, []);
   const [isMobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [loading, setLoading] = useState(false);
 
   const toggleMobileMenu = () => {
     setMobileMenuOpen(!isMobileMenuOpen);
   };
 
-  const arr = ["Home", "About", "Servies", "Contact"];
+  const arr = [
+    { text: "Home", url: "/" },
+    { text: "Product", url: "/products" },
+  ];
 
   return (
     <div className="lg:container lg:mx-0 px-5 bg-backgound-color" id="element3">
       <nav className="sticky top-0 z-50 p-0 py-5 w-full">
         <div className="w-full flex flex-wrap items-center justify-between ">
           <a href="/" className="flex items-center">
-            <img width={50} height={50} src={LOGO} className="w-15  mr-3" alt="Logo" />
+            <img
+              width={50}
+              height={50}
+              src={LOGO}
+              className="w-15  mr-3"
+              alt="Logo"
+            />
             {/* <h1 className="text-2xl font-bold">PMR CONCRETE</h1> */}
           </a>
           <div className="flex md:order-2 ">
@@ -37,9 +53,33 @@ const Navbar = () => {
                 target="_blank"
                 rel="noopener noreferrer"
               >
-                {/* <span className="text-2xl self-center">
-                  <MdMailOutline />
-                </span> */}
+                <span className="text-2xl self-center">
+                  {token ? (
+                    // <Link>
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault()
+                        navigate("/login");
+                        localStorage.clear();
+                      }}
+                      // type="button"
+                      className=" inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                    >
+                      Logout
+                    </button>
+                  ) : (
+                    // </Link>
+                    <Link to="/login">
+                      <button
+                        // onClick={loginHandler}
+                        type="button"
+                        className=" inline-block rounded bg-primary px-6 pb-2 pt-2.5 text-xs font-medium uppercase leading-normal text-white shadow-[0_4px_9px_-4px_#3b71ca] transition duration-150 ease-in-out hover:bg-primary-600 hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:bg-primary-600 focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] focus:outline-none focus:ring-0 active:bg-primary-700 active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.3),0_4px_18px_0_rgba(59,113,202,0.2)] dark:shadow-[0_4px_9px_-4px_rgba(59,113,202,0.5)] dark:hover:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:focus:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)] dark:active:shadow-[0_8px_9px_-4px_rgba(59,113,202,0.2),0_4px_18px_0_rgba(59,113,202,0.1)]"
+                      >
+                        Login
+                      </button>
+                    </Link>
+                  )}
+                </span>
               </a>
             </div>
             <div className="lg:block hidden self-center">
@@ -79,17 +119,21 @@ const Navbar = () => {
             }`}
             id="navbar-sticky"
           >
-            <ul id="element" className="flex  flex-col p-4 md:p-0 mt-4 font-semibold bg-opacity-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 ">
+            <ul
+              id="element"
+              className="flex  flex-col p-4 md:p-0 mt-4 font-semibold bg-opacity-50 md:flex-row md:space-x-8 md:mt-0 md:border-0 "
+            >
               {arr.map((value, index) => {
                 return (
                   <li key={value}>
-                    <a
-                      href="/"
+                    <Link
+                      key={index}
+                      to={value.url}
                       className="block font-play py-2 pl-3 pr-4 text-font-color  rounded hover:bg-secondary md:hover:bg-transparent md:hover:text-secondary md:p-0"
                       aria-current="page"
                     >
-                      {value}
-                    </a>
+                      {value.text}
+                    </Link>
                   </li>
                 );
               })}

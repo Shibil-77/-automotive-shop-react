@@ -1,6 +1,8 @@
 import "../src/App.css";
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import PublicRoute from './routes/PublicRoute'
+import ProtectRouter from './routes/ProtectRouter'
 
 //{  ----- ==========user page ========= ------- }
 
@@ -15,15 +17,14 @@ function App() {
       <div>
         <Routes>
           {/*<------==========user side========---> */}
+          <Route path="/login" element={<PublicRoute><LoginPage /></PublicRoute>} />
 
-          <Route path="/login" element={<LoginPage />} />
+          <Route path="/signup" element={<PublicRoute><Signup /></PublicRoute>} />
 
           <Route path="/" element={<Home />} />
 
-          <Route path="/signup" element={<Signup />} />
+          <Route path="/products" element={<ProtectRouter><Products /></ProtectRouter>} />
 
-          <Route path="/products" element={<Products />} />
-          
         </Routes>
       </div>
     </>

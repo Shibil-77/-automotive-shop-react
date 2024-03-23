@@ -24,7 +24,7 @@ const Home = () => {
         <div className="flex flex-wrap justify-center">
           {productData &&
             productData.map((value) => {
-              return <ProductCard />;
+              return <ProductCard data={value} key={value._id}/>;
             })}
         </div>
       </Layout>

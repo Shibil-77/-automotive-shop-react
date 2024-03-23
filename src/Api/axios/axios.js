@@ -5,11 +5,10 @@ export const api = axios.create({
 });
 
 api.interceptors.request.use((req) => {
-    const token=localStorage.getItem("token")
+  const token = localStorage.getItem("token")
   if (token) {
     req.headers.Authorization = "Bearer " + token;
   }
-  console.log(req.headers.Authorization);
   return req;
 });
 
@@ -32,3 +31,6 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+export const imageUploadApi = axios.create({
+});

@@ -2,7 +2,7 @@ import { api } from "../axios/axios";
 
 export const addProduct = async (formData) => {
     try {
-        console.log(formData);
+        console.log('----------1-------');
         const { data, status } = await api.post("product/addProduct", { formData });
         data.status = status
         return data;

@@ -4,6 +4,7 @@ import React from "react";
 // import { FaArrowRightLong } from "react-icons/fa6";
 // import svg from "../../assets/wave-haikei (1).svg";
 import heroImg from "../../assets/03e2fb6e8d44cb56fed5d1df0051ee91.gif";
+import { Link } from "react-router-dom";
 // import Button from "../common/Button";
 
 const Hero = () => {
@@ -29,17 +30,17 @@ const Hero = () => {
             automotive shop inventory management system
           </p>
           <div className="lg:mt-4 mt-3" id="animated">
-            <a href="https://play.google.com/store/apps/details?id=com.vehicify.vehicifydriver">
+            <Link to={"/products"}>
               <button className=" px-5 md:px-6 font-play hover:opacity-50 mx-auto lg:mx-0 gap-3 py-3 md:py-4 flex text-lg md:text-xl text-secondary rounded-lg font-medium bg-gradient-to-b from-primary via-primary to-primary cursor-pointer">
-                Shop
+                Product
                 <span className="text-primary text-sm md:text-base self-center">
                   {/* <FaArrowRightLong /> */}
                 </span>
               </button>
-            </a>
+            </Link>
           </div>
         </div>
-        <div className="lg:1/2" id="element2">
+        <div className="lg:1/2 w-6/12 lg:block hidden" id="element2">
           <img
             className="w-full lg:h-[30rem] h-[20rem]"
             src={heroImg}
@@ -48,13 +49,6 @@ const Hero = () => {
           />
         </div>
       </section>
-      {/* <div className="h-32 hidden  md:block bg-secondary border-none">
-        <Image
-          className="w-full bottom-0  absolute border-none "
-          //  src={svg}
-          alt=""
-        />
-      </div> */}
     </div>
   );
 };
